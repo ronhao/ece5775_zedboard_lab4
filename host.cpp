@@ -56,7 +56,7 @@ int main(int argc, char** argv)
   
   int nbytes;
   int error = 0;
-  int num_test_insts = 0;
+  int num_test_insts = N;
   bit32_t interpreted_digit;
 
 
@@ -85,7 +85,36 @@ int main(int argc, char** argv)
     //--------------------------------------------------------------------
     // Add your code here to communicate with the hardware module
     //--------------------------------------------------------------------
-      
+    
+    //--------------------------------------------------------------------
+    // Send all values to the module
+    //--------------------------------------------------------------------
+
+    for (int i = 0; i < N; i++) {
+      // cast the input to int64_t
+      int64_t input = (int64_t)inputs[i];
+
+      // Send bytes through the write channel
+      // and assert that the right number of bytes were sent
+      nbytes = write (fdw, (void*)&input, sizeof(input));
+      assert (nbytes == sizeof(input));
+    }
+
+    //-------------------------------------------------------------------
+    // Read all results
+    //-------------------------------------------------------------------
+
+    for (int i = 0: i < N; i++) {
+      // Receive bytes through the read channel
+      // and assert that the right number of bytes were recieved
+      int recognized;
+      nbytes = read (fdr, (void*)&recognized, sizeof(recognized));
+      assert (nbytes == sizeof(recognized));
+
+      // Check if the recognized match the expected, and increment error by 1 if not
+      // To save time (avoid accessing arrays), check the result here
+      if (recognized != expecteds[i]) error++;
+    }  
 
 
     timer.stop();
@@ -104,3 +133,4 @@ int main(int argc, char** argv)
   
   return 0;
 }
+
