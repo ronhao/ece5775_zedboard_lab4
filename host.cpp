@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     // Read all results
     //-------------------------------------------------------------------
 
-    for (int i = 0: i < N; i++) {
+    for (int i = 0; i < N; i++) {
       // Receive bytes through the read channel
       // and assert that the right number of bytes were recieved
       int recognized;
